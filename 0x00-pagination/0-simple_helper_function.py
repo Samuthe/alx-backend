@@ -1,4 +1,4 @@
-#!/usr/bin/en python3
+#!/usr/bin/env python3
 
 def index_range(page: int, page_size: int) -> tuple[int, int]:
     """return start and end of index"""
