@@ -43,7 +43,15 @@ def get_locale():
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0', port='5000')
 
-@app.route('/', strict_slashes=False)
-def index():
-    '''render html page'''
+
+@app.route('/')
+@app.route('/templates/4-index.html')
+def index() -> str:
+    '''render page'''
     return render_template('4-index.html')
+
+
+# @app.route('/', strict_slashes=False)
+# def index():
+#     '''render html page'''
+#     return render_template('4-index.html')
