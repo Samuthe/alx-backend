@@ -17,21 +17,18 @@ app.config.from_object(Config)
 babel = Babel(app)
 
 
-@app.route('/', strict_slashes=False)
-def index():
-    '''render html page'''
-    return render_template('4-index.html')
-
-
 @babel.localeselector
 def get_locale():
-    language = None
-    if language is not None:
-        for x in language:
-            locale = request.args.get('locale')
-            if locale == x:
-                return
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+    try:
+        language = [x for x in Config.LANGUAGES]
+    except ValueError:
+        if language is not None:
+            for x in language:
+                locale = request.args.get('locale')
+                if locale == x:
+                    return locale
+        return request.accept_languages.best_match(app.config['LANGUAGES'])
 
 
 # @babel.localeselector
@@ -45,3 +42,8 @@ def get_locale():
 
 # if __name__ == '__main__':
 #     app.run(debug=True, host='0.0.0.0', port='5000')
+
+@app.route('/', strict_slashes=False)
+def index():
+    '''render html page'''
+    return render_template('4-index.html')
