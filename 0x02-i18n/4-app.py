@@ -76,7 +76,7 @@ def index():
     return render_template("4-index.html")
 
 
-@babel.localeselector
+# @babel.localeselector
 def get_locale():
     """Gets best fmatch locale according to request"""
     locale = request.args.get('locale')
@@ -86,4 +86,4 @@ def get_locale():
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port="5000")
+    app.run(debug=True, host="0.0.0.0", port="2000")
