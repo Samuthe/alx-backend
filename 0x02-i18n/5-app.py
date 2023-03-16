@@ -76,7 +76,7 @@ users = {
 }
 
 
-# @babel.localeselector
+@babel.localeselector
 def get_locale():
     """ Gets client's locale/region
         Checks if locale has been passed in the parameters
