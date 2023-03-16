@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 '''my module 5'''
 from flask import Flask, render_template, request
-from flask_babel import Babel, _
+from flask_babel import Babel, _, g
 
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
@@ -29,7 +29,7 @@ def index():
     return render_template('5-index.html')
 
 
-@babel.localeselector
+# @babel.localeselector
 def get_locale():
     '''localize language'''
     try:
@@ -42,3 +42,7 @@ def get_locale():
                 if locale == j:
                     return locale
             return request.accept_languages.best_match(app.config['LANGUAGES'])
+
+
+if __name__ == '__main__':
+    app.run(debug=True, host='0.0.0.0', port='2000')
