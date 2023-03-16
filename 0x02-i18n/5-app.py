@@ -49,13 +49,25 @@
 
 
 #!/usr/bin/env python3
-"""
-Module 5-app
-"""
+""" Flask application module """
+
+
 
 
 from flask import Flask, render_template, request, g
 from flask_babel import Babel
+from typing import Dict, Optional
+class Config(object):
+    """ Flask app configuration class """
+    LANGUAGES = ["en", "fr"]
+    BABEL_DEFAULT_LOCALE = "en"
+    BABEL_DEFAULT_TIMEZONE = "UTC"
+
+
+app = Flask(__name__)
+app.config.from_object(Config)
+app.url_map.strict_slashes = False
+babel = Babel(app)
 users = {
     1: {"name": "Balou", "locale": "fr", "timezone": "Europe/Paris"},
     2: {"name": "Beyonce", "locale": "en", "timezone": "US/Central"},
@@ -64,49 +76,41 @@ users = {
 }
 
 
-class Config(object):
-    """i18n configuration"""
-    LANGUAGES = ['en', 'fr']
-    BABEL_DEFAULT_LOCALE = 'en'
-    BABEL_DEFAULT_TIMEZONE = 'UTC'
-
-
-app = Flask(__name__)
-app.config.from_object(Config)
-babel = Babel(app)
-
-
-@app.route("/", strict_slashes=False)
-def index():
-    """displays a basic hello world message"""
-    return render_template("5-index.html")
-
-
 # @babel.localeselector
 def get_locale():
-    """Gets best fmatch locale according to request"""
-    locale = request.args.get('locale')
-    if locale and locale in app.config['LANGUAGES']:
+    """ Gets client's locale/region
+        Checks if locale has been passed in the parameters
+    """
+    locale = request.args.get('locale', '')
+    if locale in app.config["LANGUAGES"]:
         return locale
-    return request.accept_languages.best_match(app.config['LANGUAGES'])
+    return request.accept_languages.best_match(Config.LANGUAGES)
 
 
-def get_user():
-    """returns a given user"""
+def get_user() -> Optional[Dict]:
+    """ Search for user in user database based
+        on request id
+    """
     user_id = request.args.get('login_as')
-
-    if user_id is None:
-        return None
-
-    return users.get(int(user_id))
+    if user_id:
+        return users.get(int(user_id), None)
+    return None
 
 
 @app.before_request
-def before_request():
-    """sets a user object to flask.g"""
-    user = get_user()
-    g.user = user
+def before_request() -> None:
+    """ Do this before serving the
+        request
+    """
+    g.user = get_user()
+
+
+@app.route("/")
+def home():
+    """ Home route """
+    return render_template("5-index.html")
 
 
 if __name__ == "__main__":
-    app.run(debug=True, host="0.0.0.0", port="5000")
+    app.run(host="0.0.0.0", port=5000)
+''
